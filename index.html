@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - ElectraVote</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md">
+      <div class="p-6">
+        <h1 class="text-2xl font-bold text-indigo-600">ElectraVote</h1>
+        <p class="text-sm text-gray-500">Admin Control Panel</p>
+      </div>
+      <nav class="mt-8 space-y-2">
+        <a href="#" class="block px-6 py-2 text-indigo-600 bg-indigo-100 rounded">Dashboard</a>
+        <a href="#" class="block px-6 py-2 hover:bg-gray-200 rounded">Voter Management</a>
+        <a href="#" class="block px-6 py-2 hover:bg-gray-200 rounded">Candidate Management</a>
+        <a href="#" class="block px-6 py-2 hover:bg-gray-200 rounded">Create Election</a>
+        <a href="#" class="block px-6 py-2 hover:bg-gray-200 rounded">Live Results</a>
+        <a href="#" class="block px-6 py-2 hover:bg-gray-200 rounded">Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 overflow-y-auto">
+      <h2 class="text-2xl font-bold mb-4">Dashboard Overview</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded shadow">
+          <h3 class="text-lg font-semibold">Total Voters</h3>
+          <p class="text-3xl font-bold text-indigo-600">1,240</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow">
+          <h3 class="text-lg font-semibold">Total Candidates</h3>
+          <p class="text-3xl font-bold text-indigo-600">56</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow">
+          <h3 class="text-lg font-semibold">Active Elections</h3>
+          <p class="text-3xl font-bold text-indigo-600">2</p>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded shadow">
+        <h3 class="text-xl font-semibold mb-4">Recent Activity</h3>
+        <ul class="space-y-2">
+          <li class="text-sm">🟢 New voter registered - <span class="text-gray-600">Amit Sharma</span></li>
+          <li class="text-sm">🟢 New candidate added - <span class="text-gray-600">Riya Mehra</span></li>
+          <li class="text-sm">🔴 Election closed - <span class="text-gray-600">School President 2025</span></li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
