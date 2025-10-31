@@ -1,3 +1,12 @@
+# write in terminal
+#pip install flask tensorflow numpy
+# python -m venv venv
+# venv\Scripts\activate      # on Windows
+
+ # * Running on all addresses (0.0.0.0)
+ # * Running on http://127.0.0.1:5000
+ # * Running on http://192.168.0.141:5000
+
 
 from flask import Flask, request, jsonify
 from keras.models import load_model
