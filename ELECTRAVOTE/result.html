@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Results - Messi vs Ronaldo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid #f0f2f5;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.messi {
+            border-left-color: #00b894;
+        }
+
+        .stat-card.ronaldo {
+            border-left-color: #e74c3c;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #636e72;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeaea;
+        }
+
+        .chart-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        .voters-table {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .voter-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .vote-messi {
+            color: #00b894;
+            font-weight: bold;
+            background: rgba(0, 184, 148, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .vote-ronaldo {
+            color: #e74c3c;
+            font-weight: bold;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .candidate-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .avatar.messi {
+            background: linear-gradient(135deg, #00b894, #00a085);
+        }
+
+        .avatar.ronaldo {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .winner-banner {
+            background: linear-gradient(90deg, #00b894, #55efc4);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .winner-banner.ronaldo {
+            background: linear-gradient(90deg, #e74c3c, #ff7675);
+        }
+
+        .timestamp {
+            text-align: right;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚽ Voting Results Dashboard</h1>
+            <p class="subtitle">Messi vs Ronaldo - Final Voting Results</p>
+        </header>
+
+        <!-- Winner Banner -->
+        <div class="winner-banner messi" id="winnerBanner">
+            🏆 Lionel Messi is leading with 66.7% votes!
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card messi">
+                <div class="stat-label">Messi Votes</div>
+                <div class="stat-value">4</div>
+                <div>66.7% of total</div>
+            </div>
+            
+            <div class="stat-card ronaldo">
+                <div class="stat-label">Ronaldo Votes</div>
+                <div class="stat-value">2</div>
+                <div>33.3% of total</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Total Voters</div>
+                <div class="stat-value">6</div>
+                <div>100% participation</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Win Margin</div>
+                <div class="stat-value">+2</div>
+                <div>Messi leads by 2 votes</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <div class="chart-title">Vote Distribution</div>
+                <div class="chart-wrapper">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Votes by Candidate</div>
+                <div class="chart-wrapper">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voters Table -->
+        <div class="voters-table">
+            <h2 class="chart-title">Individual Voter Choices</h2>
+            
+            <!-- Candidate Profiles -->
+            <div style="display: flex; gap: 30px; margin-bottom: 30px;">
+                <div class="candidate-profile">
+                    <div class="avatar messi">LM</div>
+                    <div>
+                        <h3>Lionel Messi</h3>
+                        <p style="color: #636e72;">4 votes • 66.7%</p>
+                    </div>
+                </div>
+                <div class="candidate-profile">
+                    <div class="avatar ronaldo">CR</div>
+                    <div>
+                        <h3>Cristiano Ronaldo</h3>
+                        <p style="color: #636e72;">2 votes • 33.3%</p>
+                    </div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Voter #</th>
+                        <th>Voter Name</th>
+                        <th>Voted For</th>
+                        <th>Vote Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="voter-name">Abhisek Das</td>
+                        <td><span class="vote-messi">✓ Lionel Messi</span></td>
+                        <td>10:30 AM</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="voter-name">Souhardya Mitra</td>
+                        <td><span class="vote-messi">✓ Lionel Messi</span></td>
+                        <td>10:45 AM</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="voter-name">Kaushik Pal</td>
+                        <td><span class="vote-ronaldo">✓ Cristiano Ronaldo</span></td>
+                        <td>11:15 AM</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td class="voter-name">Ram Sharma</td>
+                        <td><span class="vote-messi">✓ Lionel Messi</span></td>
+                        <td>11:30 AM</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td class="voter-name">Rup Mondal</td>
+                        <td><span class="vote-ronaldo">✓ Cristiano Ronaldo</span></td>
+                        <td>11:45 AM</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td class="voter-name">Arunava Chatterjee</td>
+                        <td><span class="vote-messi">✓ Lionel Messi</span></td>
+                        <td>12:00 PM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="timestamp">
+            Last updated: <span id="currentTime">Today at 14:32</span>
+        </div>
+    </div>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            document.getElementById('currentTime').textContent = `Today at ${timeString}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Lionel Messi', 'Cristiano Ronaldo'],
+                datasets: [{
+                    data: [4, 2],
+                    backgroundColor: [
+                        '#00b894',
+                        '#e74c3c'
+                    ],
+                    borderColor: [
+                        '#00a085',
+                        '#c0392b'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.raw / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.raw} votes (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bar Chart
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Messi', 'Ronaldo'],
+                datasets: [{
+                    label: 'Number of Votes',
+                    data: [4, 2],
+                    backgroundColor: [
+                        'rgba(0, 184, 148, 0.8)',
+                        'rgba(231, 76, 60, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(0, 184, 148, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return value + ' vote' + (value !== 1 ? 's' : '');
+                            }
+                        },
+                        max: 6
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Simulate live updates
+        function simulateLiveUpdate() {
+            setTimeout(() => {
+                document.getElementById('winnerBanner').innerHTML = 
+                    "🏆 <strong>FINAL RESULT:</strong> Lionel Messi wins 4-2!";
+                document.getElementById('winnerBanner').style.background = 
+                    "linear-gradient(90deg, #00b894, #55efc4)";
+            }, 3000);
+        }
+
+        simulateLiveUpdate();
+    </script>
+</body>
+</html>
